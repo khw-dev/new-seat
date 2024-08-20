@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Groups</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .group {
+            background-color: #ffffff;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+        .group h3 {
+            margin-top: 0;
+        }
+        .student {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Groups</h1>
+    <div id="groups"></div>
+
+    <script>
+        // 총 21명의 학생 생성
+        const students = Array.from({ length: 21 }, (_, i) => i + 1);
+
+        // 학생들을 랜덤하게 섞음
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        shuffle(students);
+
+        // 학생들을 그룹으로 나눔
+        const groups = [];
+        for (let i = 0; i < 21; i += 4) {
+            groups.push(students.slice(i, i + 4));
+        }
+
+        // 마지막 그룹에 5명을 배치
+        if (groups.length > 5) {
+            groups[groups.length - 2] = groups[groups.length - 2].concat(groups.pop());
+        } else if (groups.length === 5) {
+            groups[4].push(groups.pop().pop());
+        }
+
+        // 그룹을 화면에 표시
+        const groupsContainer = document.getElementById('groups');
+        groups.forEach((group, index) => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'group';
+            groupDiv.innerHTML = `<h3>Group ${index + 1}</h3>`;
+
+            group.forEach(student => {
+                const studentDiv = document.createElement('div');
+                studentDiv.className = 'student';
+                studentDiv.textContent = `Student ${student}`;
+                groupDiv.appendChild(studentDiv);
+            });
+
+            groupsContainer.appendChild(groupDiv);
+        });
+    </script>
+</body>
+</html>
